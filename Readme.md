@@ -1,7 +1,7 @@
 # Личный проект «Дела в Порядке» 
 
 * Студент: [Yelena Vertyagina](https://up.htmlacademy.ru/php/2/user/368857).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Зубов](https://htmlacademy.ru/profile/serj).
 
 ---
 
