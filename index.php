@@ -64,16 +64,19 @@ $task_list = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
 //function
 function taskCount($list, $project) {
-    $number = 0;
+    $number = 0;    //task group
+    $sum = 0;       //task total
+
+    foreach ($list as $key => $val):
+        $sum++;
+
+        if ($val['category'] == $project) {
+            $number++;
+        }
+    endforeach;
 
     if ($project == "Все") {
-        $number = 6;
-    } else {
-        foreach ($list as $key => $val):
-            if ($val['category'] == $project) {
-                $number = $number + 1;
-            }
-        endforeach;
+        $number = $sum;
     }
 
     return $number;
