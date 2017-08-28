@@ -61,6 +61,26 @@ $total = 6;
 
 //2D array
 $task_list = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
+
+//function
+function taskCount($list, $project) {
+    $number = 0;    //task group
+    $sum = 0;       //task total
+
+    foreach ($list as $key => $val):
+        $sum++;
+
+        if ($val['category'] == $project) {
+            $number++;
+        }
+    endforeach;
+
+    if ($project == "Все") {
+        $number = $sum;
+    }
+
+    return $number;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -113,7 +133,7 @@ $task_list = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
                             <a class="main-navigation__list-item-link" href="#">
                                 <?php print($busyness[$num])?>
                             </a>
-                            <span class="main-navigation__list-item-count">24</span>
+                            <span class="main-navigation__list-item-count"><?php print taskCount($task_list, $busyness[$num]) ?></span>
                         </li>
                         <?php $num++; } ?>
                     </ul>
