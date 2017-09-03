@@ -38,6 +38,7 @@
 
 <table class="tasks">
     <?php foreach ($task as $key => $val): ?>
+        <?php if ($val['category'] == $category || $category == 'Все') {?>
         <tr class="tasks__item task <?php if ($val['done'] == 'Да') print('task--completed') ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
@@ -50,5 +51,6 @@
             <td class="task__controls">
             </td>
         </tr>
+    <?php }; ?>
     <?php endforeach; ?>
 </table>

@@ -86,20 +86,42 @@ function taskCount($list, $project) {
     return $number;
 }
 
+//Проверка категории
+if (isset($_GET['category'])) {
+    if ($_GET['category'] < $total) {
+        $cat = $busyness[$_GET['category']];
+    } else {
+        $cat = 'error';
+//        http_response_code(404);
+    }
+} else {
+    $cat = $busyness[0];
+}
+
 //Подключение функции шаблонизации
 require_once "functions.php";
 
 //контент главной страницы
-$page_content = renderTemplate('templates/index.php', ['task' => $task_list]);
+if ($cat == 'error') {
+    http_response_code(404);
+} else {
+    $page_content = renderTemplate('templates/index.php',
+        [
+            'task' => $task_list,
+            'category' => $cat
+        ]);
+}
 
 //окончательный HTML код
 $layout_content = renderTemplate('templates/layout.php',
-    ['content' => $page_content,
+    [
+        'content' => $page_content,
         'name' => $name,
         'title' => 'Дела в порядке - Главная',
         'busyness' => $busyness,
         'task' => $task_list,
-        'total' => $total]);
+        'total' => $total
+    ]);
 
 print($layout_content);
 

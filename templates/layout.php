@@ -40,13 +40,11 @@
                 <h2 class="content__side-heading">Проекты</h2>
 
                 <nav class="main-navigation">
-                    <?php
-                        $num = 0;
-                    ?>
+                    <?php $num = 0; ?>
                     <ul class="main-navigation__list">
                         <?php while ($num < $total) { ?>
                             <li class="main-navigation__list-item <?php if ($num == 0) print("main-navigation__list-item--active") ?>">
-                                <a class="main-navigation__list-item-link" href="#">
+                                <a class="main-navigation__list-item-link" href="?category=<?=$num; ?>">
                                     <?php print($busyness[$num])?>
                                 </a>
                                 <span class="main-navigation__list-item-count"><?php print taskCount($task, $busyness[$num]) ?></span>
