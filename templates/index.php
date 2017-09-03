@@ -37,7 +37,7 @@
 </div>
 
 <table class="tasks">
-    <?php foreach ($task_list as $key => $val): ?>
+    <?php foreach ($task as $key => $val): ?>
         <tr class="tasks__item task <?php if ($val['done'] == 'Да') print('task--completed') ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">

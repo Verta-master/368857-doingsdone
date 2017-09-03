@@ -94,7 +94,12 @@ $page_content = renderTemplate('templates/index.php', ['task' => $task_list]);
 
 //окончательный HTML код
 $layout_content = renderTemplate('templates/layout.php',
-    ['content' => $page_content, 'name' => $name, 'title' => 'Дела в порядке - Главная']);
+    ['content' => $page_content,
+        'name' => $name,
+        'title' => 'Дела в порядке - Главная',
+        'busyness' => $busyness,
+        'task' => $task_list,
+        'total' => $total]);
 
 print($layout_content);
 

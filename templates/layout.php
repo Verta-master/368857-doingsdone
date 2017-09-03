@@ -41,7 +41,7 @@
 
                 <nav class="main-navigation">
                     <?php
-                    $num = 0;
+                        $num = 0;
                     ?>
                     <ul class="main-navigation__list">
                         <?php while ($num < $total) { ?>
@@ -49,7 +49,7 @@
                                 <a class="main-navigation__list-item-link" href="#">
                                     <?php print($busyness[$num])?>
                                 </a>
-                                <span class="main-navigation__list-item-count"><?php print taskCount($task_list, $busyness[$num]) ?></span>
+                                <span class="main-navigation__list-item-count"><?php print taskCount($task, $busyness[$num]) ?></span>
                             </li>
                             <?php $num++; } ?>
                     </ul>
