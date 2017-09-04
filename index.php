@@ -91,8 +91,8 @@ if (isset($_GET['category'])) {
     if ($_GET['category'] < $total) {
         $cat = $busyness[$_GET['category']];
     } else {
-        $cat = 'error';
-//        http_response_code(404);
+        header("HTTP/1.0 404 Not Found");
+        exit(http_response_code(404));
     }
 } else {
     $cat = $busyness[0];
@@ -102,15 +102,11 @@ if (isset($_GET['category'])) {
 require_once "functions.php";
 
 //контент главной страницы
-if ($cat == 'error') {
-    http_response_code(404);
-} else {
-    $page_content = renderTemplate('templates/index.php',
-        [
-            'task' => $task_list,
-            'category' => $cat
-        ]);
-}
+$page_content = renderTemplate('templates/index.php',
+    [
+        'task' => $task_list,
+        'category' => $cat
+    ]);
 
 //окончательный HTML код
 $layout_content = renderTemplate('templates/layout.php',
