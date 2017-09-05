@@ -87,16 +87,61 @@ function taskCount($list, $project) {
 }
 
 //Проверка категории
+$cat = 0;
+$show = false;
+
 if (isset($_GET['category'])) {
-    if ($_GET['category'] < $total) {
+    if ($_GET['category'] == 'add') {
+        //Показ формы по нажатию кнопки
+        require_once "templates/form.php";
+        $show = true;
+    } elseif ($_GET['category'] < $total) {
+        //Выбор категории в сайдбаре
         $cat = $busyness[$_GET['category']];
-    } else {
-        header("HTTP/1.0 404 Not Found");
-        exit(http_response_code(404));
-    }
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            exit(http_response_code(404));
+        }
 } else {
     $cat = $busyness[0];
 }
+
+//Обработка формы
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $project = $_POST['name'] ?? '';
+    $folder = $_POST['project'] ?? '';
+    $date = $_POST['date'] ?? '';
+
+    //Проверка на пустые поля
+    if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
+        require_once "templates/form.php";
+        $show = true;
+    } else {
+        //Сохранение файла если загружен
+        if (isset($_FILES['preview'])) {
+            $file_name = $_FILES['preview']['name'];
+            $file_path = __DIR__ . '/';
+            move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
+        }
+        //Перенаправление в случае успешной отправки формы
+        header("Location: /index.php?success=true");
+
+        //Добавление задачи в массив задач
+        if (isset($_GET['success'])) {
+            $task_new = [
+                "task" => $project,
+                "date" => $date,
+                "category" => $folder,
+                "done" => "Нет"
+            ];
+//            array_splice($task_list,0,0, array($task_new));
+            array_unshift($task_list, $task_new);
+        }
+    }
+}
+
+
+
 
 //Подключение функции шаблонизации
 require_once "functions.php";
@@ -116,7 +161,8 @@ $layout_content = renderTemplate('templates/layout.php',
         'title' => 'Дела в порядке - Главная',
         'busyness' => $busyness,
         'task' => $task_list,
-        'total' => $total
+        'total' => $total,
+        'form' => $show
     ]);
 
 print($layout_content);
