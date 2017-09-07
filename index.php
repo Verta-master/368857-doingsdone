@@ -123,25 +123,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $file_path = __DIR__ . '/';
             move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
         }
-        //Перенаправление в случае успешной отправки формы
-        header("Location: /index.php?success=true");
-
+        
         //Добавление задачи в массив задач
-        if (isset($_GET['success'])) {
-            $task_new = [
-                "task" => $project,
-                "date" => $date,
-                "category" => $folder,
-                "done" => "Нет"
-            ];
-//            array_splice($task_list,0,0, array($task_new));
-            array_unshift($task_list, $task_new);
-        }
+        $task_new = [
+            "task" => $project,
+            "date" => $date,
+            "category" => $folder,
+            "done" => "Нет"
+        ];
+        array_unshift($task_list, $task_new);
     }
 }
-
-
-
 
 //Подключение функции шаблонизации
 require_once "functions.php";
