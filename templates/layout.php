@@ -29,7 +29,7 @@
                     <div class="user-menu__data">
                         <p><?=$name;?></p>
 
-                        <a href="#">Выйти</a>
+                        <a href="?category=logout">Выйти</a>
                     </div>
                 </div>
             </div>

@@ -66,7 +66,7 @@ $task_list = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
 $name = "Yelena";
 
-//function
+//user functions
 function taskCount($list, $project) {
     $number = 0;    //task group
     $sum = 0;       //task total
@@ -86,68 +86,114 @@ function taskCount($list, $project) {
     return $number;
 }
 
+function searchUserByEmail($email, $users) {
+    $result = null;
+    foreach ($users as $user) {
+        if ($user['email'] == $email) {
+            $result = $user;
+            break;
+        }
+    }
+    return $result;
+}
+
+session_start();
+
 //Проверка категории
 $cat = 0;
 $show = false;
+$show_login = false;
 
 if (isset($_GET['category'])) {
+    //Показ формы входа
+    if ($_GET['category'] == 'login') {
+        $show_login = true;
+    }
+    //Показ формы добавления задачи
     if ($_GET['category'] == 'add') {
-        //Показ формы по нажатию кнопки
         require_once "templates/form.php";
         $show = true;
-    } elseif ($_GET['category'] < $total) {
-        //Выбор категории в сайдбаре
+    }
+    //Выбор категории в сайдбаре
+    $cat = $busyness[0];
+    if ($_GET['category'] < $total) {
         $cat = $busyness[$_GET['category']];
         } else {
             header("HTTP/1.0 404 Not Found");
             exit(http_response_code(404));
         }
-} else {
-    $cat = $busyness[0];
+    //Log out
+    if ($_GET['category'] == 'logout') {
+        $_SESSION = [];
+        $show_login = false;
+    }
 }
 
-//Обработка формы
+//Обработка форм
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $project = $_POST['name'] ?? '';
     $folder = $_POST['project'] ?? '';
     $date = $_POST['date'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     //Проверка на пустые поля
-    if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
-        require_once "templates/form.php";
-        $show = true;
+    //Форма логина
+    if ($_POST['email'] == '' || $_POST['password'] == '') {
+        $show_login = true;
     } else {
-        //Сохранение файла если загружен
-        if (isset($_FILES['preview'])) {
-            $file_name = $_FILES['preview']['name'];
-            $file_path = __DIR__ . '/';
-            move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
+        require_once "userdata.php";
+        if ($user = searchUserByEmail($email, $users)) {
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user'] = $user;
+                $name = $user['name'];
+                $pass = true;
+            } else {
+                $show_login = true;
+                $pass = false;
+            }
         }
-        
-        //Добавление задачи в массив задач
-        $task_new = [
-            "task" => $project,
-            "date" => $date,
-            "category" => $folder,
-            "done" => "Нет"
-        ];
-        array_unshift($task_list, $task_new);
+
+        //Форма добавления задачи
+        if ($show) {
+            if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
+                require_once "templates/form.php";
+            } else {
+                //Сохранение файла если загружен
+                if (isset($_FILES['preview'])) {
+                    $file_name = $_FILES['preview']['name'];
+                    $file_path = __DIR__ . '/';
+                    move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
+                }
+
+                //Добавление задачи в массив задач
+                $task_new = [
+                    "task" => $project,
+                    "date" => $date,
+                    "category" => $folder,
+                    "done" => "Нет"
+                ];
+                array_unshift($task_list, $task_new);
+            }
+        }
     }
 }
 
 //Подключение функции шаблонизации
 require_once "functions.php";
 
-//контент главной страницы
-$page_content = renderTemplate('templates/index.php',
-    [
-        'task' => $task_list,
-        'category' => $cat
-    ]);
-
-//окончательный HTML код
-$layout_content = renderTemplate('templates/layout.php',
-    [
+//user autentification
+if ($_SESSION != []) {
+    //залогиненный пользователь
+    //контент главной страницы
+    $page_content = renderTemplate('templates/index.php',
+        [
+            'task' => $task_list,
+            'category' => $cat
+        ]);
+    //окончательный HTML код
+    $layout_content = renderTemplate('templates/layout.php',
+        [
         'content' => $page_content,
         'name' => $name,
         'title' => 'Дела в порядке - Главная',
@@ -156,6 +202,17 @@ $layout_content = renderTemplate('templates/layout.php',
         'total' => $total,
         'form' => $show
     ]);
+} else {
+    //незалогиненный пользователь
+    $layout_content = renderTemplate('templates/guest.php',
+        [
+            'title' => 'Дела в порядке - Главная',
+            'form' => $show_login,
+            'email' => $email,
+            'password' => $password,
+            'pass' => $pass
+        ]);
+}
 
 print($layout_content);
 
