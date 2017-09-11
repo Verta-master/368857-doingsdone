@@ -124,16 +124,12 @@ if (isset($_GET['category'])) {
         }
     //Log out
     if ($_GET['category'] == 'logout') {
-        $_SESSION = [];
-        $show_login = false;
+        require_once "logout.php";
     }
 }
 
 //Обработка форм
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $project = $_POST['name'] ?? '';
-    $folder = $_POST['project'] ?? '';
-    $date = $_POST['date'] ?? '';
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
@@ -153,28 +149,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $pass = false;
             }
         }
+   }
+}
 
-        //Форма добавления задачи
-        if ($show) {
-            if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
-                require_once "templates/form.php";
-            } else {
-                //Сохранение файла если загружен
-                if (isset($_FILES['preview'])) {
-                    $file_name = $_FILES['preview']['name'];
-                    $file_path = __DIR__ . '/';
-                    move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
-                }
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $project = $_POST['name'] ?? '';
+    $folder = $_POST['project'] ?? '';
+    $date = $_POST['date'] ?? '';
 
-                //Добавление задачи в массив задач
-                $task_new = [
-                    "task" => $project,
-                    "date" => $date,
-                    "category" => $folder,
-                    "done" => "Нет"
-                ];
-                array_unshift($task_list, $task_new);
+    //Форма добавления задачи
+    if ($show) {
+        if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
+            require_once "templates/form.php";
+        } else {
+            //Сохранение файла если загружен
+            if (isset($_FILES['preview'])) {
+                $file_name = $_FILES['preview']['name'];
+                $file_path = __DIR__ . '/';
+                move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
             }
+
+            //Добавление задачи в массив задач
+            $task_new = [
+                "task" => $project,
+                "date" => $date,
+                "category" => $folder,
+                "done" => "Нет"
+            ];
+            array_unshift($task_list, $task_new);
         }
     }
 }

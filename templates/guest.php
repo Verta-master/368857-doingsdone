@@ -96,10 +96,10 @@
       <div class="form__row">
         <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
-        <input class="form__input <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['password'] == '') print ('form__input--error'); ?>"
+        <input class="form__input <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && ($_POST['password'] == '' || !($pass))) print ('form__input--error'); ?>"
                type="password" name="password" id="password" value="<?=$password ?>" placeholder="Введите пароль">
           <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['password'] == '') print('<p class="form__message">Вы забыли ввести пароль</p>') ?>
-          <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && !($pass)) print('<p class="form__message">Вы ввели неверный пароль</p>') ?>
+          <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['password'] != '' && !($pass)) print('<p class="form__message">Вы ввели неверный пароль</p>') ?>
       </div>
 
       <div class="form__row">
