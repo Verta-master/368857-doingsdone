@@ -62,10 +62,6 @@ $total = 6;
 //2D array
 $task_list = [$task_1, $task_2, $task_3, $task_4, $task_5, $task_6];
 
-//user name
-
-$name = "Yelena";
-
 //user functions
 function taskCount($list, $project) {
     $number = 0;    //task group
@@ -128,13 +124,12 @@ if (isset($_GET['category'])) {
     }
 }
 
-//Обработка форм
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//Обработка формы логина
+if (isset($_POST['password'])) {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
     //Проверка на пустые поля
-    //Форма логина
     if ($_POST['email'] == '' || $_POST['password'] == '') {
         $show_login = true;
     } else {
@@ -142,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($user = searchUserByEmail($email, $users)) {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = $user;
-                $name = $user['name'];
+                $username = $user['name'];
                 $pass = true;
             } else {
                 $show_login = true;
@@ -152,32 +147,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+$username = $_SESSION['user']['name'];
+
+//    Форма добавления задачи
+if (isset($_POST['name'])) {
     $project = $_POST['name'] ?? '';
     $folder = $_POST['project'] ?? '';
     $date = $_POST['date'] ?? '';
 
-    //Форма добавления задачи
-    if ($show) {
-        if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
-            require_once "templates/form.php";
-        } else {
-            //Сохранение файла если загружен
-            if (isset($_FILES['preview'])) {
-                $file_name = $_FILES['preview']['name'];
-                $file_path = __DIR__ . '/';
-                move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
-            }
-
-            //Добавление задачи в массив задач
-            $task_new = [
-                "task" => $project,
-                "date" => $date,
-                "category" => $folder,
-                "done" => "Нет"
-            ];
-            array_unshift($task_list, $task_new);
+    if ($_POST['name'] == '' || $_POST['project'] == '' || $_POST['date'] == '') {
+        require_once "templates/form.php";
+        $show = true;
+    } else {
+        //Сохранение файла если загружен
+        if (isset($_FILES['preview'])) {
+            $file_name = $_FILES['preview']['name'];
+            $file_path = __DIR__ . '/';
+            move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
         }
+
+        //Добавление задачи в массив задач
+        $task_new = [
+            "task" => $project,
+            "date" => $date,
+            "category" => $folder,
+            "done" => "Нет"
+        ];
+        array_unshift($task_list, $task_new);
     }
 }
 
@@ -197,7 +193,7 @@ if ($_SESSION != []) {
     $layout_content = renderTemplate('templates/layout.php',
         [
         'content' => $page_content,
-        'name' => $name,
+        'name' => $username,
         'title' => 'Дела в порядке - Главная',
         'busyness' => $busyness,
         'task' => $task_list,
