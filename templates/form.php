@@ -9,7 +9,7 @@
 
             <input class="form__input <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['name'] == '') print ('form__input--error'); ?>"
                    type="text" name="name" id="name" value="<?=$project;?>" placeholder="Введите название">
-            <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['date'] == '') print('<span class="form__error">Заполните это поле</span>') ?>
+            <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['name'] == '') print('<span class="form__error">Заполните это поле</span>') ?>
         </div>
 
         <div class="form__row">
