@@ -1,7 +1,4 @@
 <?php
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
 // устанавливаем часовой пояс в Московское время
 date_default_timezone_set('Europe/Moscow');
 
@@ -124,6 +121,22 @@ if (isset($_GET['category'])) {
     }
 }
 
+//Cookie
+if (isset($_GET['show_completed'])) {
+    $cookie_name = "complete";
+    $cookie_value = $_GET['show_completed'];
+    $expire = strtotime("+7 days");
+    $path = "/";
+    setcookie($cookie_name, $cookie_value, $expire, $path);
+    header("Location: /index.php");
+}
+
+if (isset($_COOKIE['complete'])) {
+    $show_complete_tasks = $_COOKIE['complete'];
+} else {
+    $show_complete_tasks = 0;
+}
+
 //Обработка формы логина
 if (isset($_POST['password'])) {
     $email = $_POST['email'] ?? '';
@@ -187,7 +200,8 @@ if ($_SESSION != []) {
     $page_content = renderTemplate('templates/index.php',
         [
             'task' => $task_list,
-            'category' => $cat
+            'category' => $cat,
+            'show_complete_tasks' => $show_complete_tasks
         ]);
     //окончательный HTML код
     $layout_content = renderTemplate('templates/layout.php',
