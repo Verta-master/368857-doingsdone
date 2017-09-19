@@ -2,26 +2,32 @@ CREATE DATABASE diary;
 USE diary;
 
 CREATE TABLE projects (
-  id  INT AUTO_INCREMENT PRIMARY KEY,
-  project_name  CHAR(20)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  project_name CHAR(20),
+  task_id INT,
+  author_id INT
 );
 
 CREATE TABLE tasks (
-  id  INT AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   created DATETIME,
-  performed DATETIME,
+  performed BOOL,
   task_name CHAR(35),
-  file  CHAR(50),
-  deadline  DATETIME
+  file CHAR(50),
+  deadline DATETIME,
+  author_id INT,
+  project_id INT
 );
 
 CREATE TABLE users (
-  id  INT AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   registration  DATETIME,
   email CHAR(20),
   user_name CHAR(40),
-  password  CHAR(40),
-  contacts  CHAR(100)
+  password CHAR(40),
+  contacts CHAR(100),
+  task_id INT,
+  project_id INT
 );
 
 CREATE UNIQUE INDEX email ON users(email);
