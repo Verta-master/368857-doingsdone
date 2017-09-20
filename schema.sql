@@ -11,7 +11,7 @@ CREATE TABLE projects (
 CREATE TABLE tasks (
   id INT AUTO_INCREMENT PRIMARY KEY,
   created DATETIME,
-  performed BOOL,
+  performed DATETIME,
   task_name CHAR(35),
   file CHAR(50),
   deadline DATETIME,
