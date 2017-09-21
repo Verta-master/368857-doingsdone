@@ -1,4 +1,5 @@
 <?php
+require_once "mysql_helper.php";
 function renderTemplate($path, $array) {
 
     if (file_exists($path)) {
