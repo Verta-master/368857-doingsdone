@@ -1,4 +1,5 @@
 <?php
+
 // устанавливаем часовой пояс в Московское время
 date_default_timezone_set('Europe/Moscow');
 
@@ -192,6 +193,9 @@ if (isset($_POST['name'])) {
 
 //Подключение функции шаблонизации
 require_once "functions.php";
+
+//Подключение базы данных
+require_once "init.php";
 
 //user autentification
 if ($_SESSION != []) {
